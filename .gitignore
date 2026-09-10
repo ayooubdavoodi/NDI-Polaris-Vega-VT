@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+
+# Vendor installer binaries too large for GitHub (100MB hard limit) — download from NDI directly.
+installation_files/*.sh

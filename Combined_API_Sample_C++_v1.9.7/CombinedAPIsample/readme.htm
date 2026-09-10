@@ -1,0 +1,267 @@
+<html>
+<title>NDI CAPISample Readme</title>
+<meta content="text/html; charset=windows-1252" http-equiv="Content-Type">
+<style type="text/css"><!--
+body {
+	margin: 30px;
+}
+h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	color:navy;
+}
+h2 {
+	font-family: Arial, Helvetica, sans-serif;
+}
+h3 {
+	font-family: Arial, Helvetica, sans-serif;
+}
+h2 {
+	color:navy;
+	font-family: Arial, Helvetica, sans-serif;
+}
+p {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14;
+	margin: 6px;
+}
+li {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14;
+}
+li.li {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14;
+}
+td {
+	vertical-align: top;
+}
+
+-->
+</style>
+</head>
+<body>
+<h1>NDI CAPI Sample Readme</h1>
+<p>This document includes important information before using this software.</p>
+
+<h2>Table of Contents</h2>
+<p><a href="#about_sample">About the sample</a></li>
+<p><a href="#using_sample">Using the sample</a>
+<p>&nbsp;&nbsp;&nbsp;<a href="#connect_dtls">Connecting via DTLS</a>
+<p><a href="#building_sample">Building the sample</a>
+<p><a href="#ardemo">AR Demo</a>
+<p><a href="#openssl">OpenSSL</a>
+<p><a href="#changes">List of changes</a>
+
+<h2><a name="about_sample">About the sample</a></h2>
+<p>The Combined API (CAPI) sample application demonstrates how to use the Combined API for Polaris and Aurora systems in a C++ application to communicate with an NDI measurement system. The source code is intended as a reference to help developers become familiar with NDI's API.
+<p>Please see license.txt and the copyright notices in source files for the terms associated with the provision of this sample code.
+
+<h2><a name="using_sample">Using CAPIsample</a></h2>
+<p>The usage of the CAPIsample console application is:
+
+<ol>
+	<li>Connect an NDI measurement system to the host machine and ensure the device is visible on the OS.
+		<ol type="a">
+			<li>For serial devices, ensure the USB drivers are installed and the operating system recognizes the serial port.
+				<br/>On Windows this will be a COM port listed in the device manager.
+				<br/>On Linux this will be a /dev/tty* device (usually /dev/ttyUSBx where x is a number).
+				<br/>On macOS this will be /dev/cu.usbserial-xxxxx and /dev/tty.usbserial-xxxxx. Use the /dev/cu.usbserial-xxxxx port as it is the variant that supports blocked reads and writes. </li>
+			<li>For ethernet devices, ensure the host machine can ping the hostname or IP address of the NDI device.</li>
+		</ol></li>
+	<li>Compile and link CAPIsample following the instructions below. The build process will produce a shared library and a sample program that uses the library. Pre-compiled binaries are also supplied in ./bin</li>
+	<li>From a terminal window run the program as follows:
+		<ol type="a">
+			<li>To run pre-compiled binaries</li>
+			<p>On Linux:
+			<ul>
+				<li><code>./bin/linux/capisample &lt;hostname&gt; --tools=[file1.rom],[file2.rom] [args]</code>
+			</ul>
+			<p>On Windows 64-bit:
+			<ul>
+				<li><code>bin\win64\sample.exe &lt;hostname&gt; --tools=[file1.rom],[file2.rom] [args]</code>
+			</ul>
+			<p>On Mac:
+			<ul>
+				<li><code>./bin/macosx/CAPIsample &lt;hostname&gt; --tools=[file1.rom],[file2.rom] [args]</code>
+			</ul>
+			<li>To run custom compiled binaries</li>
+			<p>On Linux:
+			<ul>
+				<li><code>./build/linux/capisample &lt;hostname&gt; --tools=[file1.rom],[file2.rom] [args]</code>
+			</ul>
+			<p>On Windows 64-bit:
+			<ul>
+				<li>Default: <code>x64\Release\sample.exe &lt;hostname&gt; --tools=[file1.rom],[file2.rom] [args]</code>
+				<li>With OpenSSL: <code>x64\Release_TLS\sample.exe &lt;hostname&gt; --tools=[file1.rom],[file2.rom] [args]</code>
+			</ul>
+			<p>On Mac:
+			<ul>
+				<li><code>./build/macosx/capisample &lt;hostname&gt; --tools=[file1.rom],[file2.rom] [args]</code>
+			</ul>
+		</ol>
+		<p>where
+		<ul>
+			<li><code>&lt;hostname&gt;</code> (required) The measurement device's hostname, IP address, or serial port.
+			<li><code>--tools=[file1.rom],[file2.rom]...</code> (required) A comma delimited list of tools to load.
+			<li><code>[args]</code> (optional) Any other arguments such as tools to load, or SCU to connect to.
+		</ul>
+		<p>Examples of connection specification:
+		<ul>
+			<li>Connecting to device by IP address: 169.254.8.50
+			<li>Connecting to device by hostname: P9-B0103.local
+			<li>Connecting to serial port varies by OS:
+			<br/>COM10 (Win), /dev/ttyUSB0 (Linux), /dev/cu.usbserial-001014FA (Mac)
+		</ul>
+		<p>For more information and a list of optional arguments, run the sample with no arguments:
+		<p>On Linux:
+		<ul>
+			<li><code>./bin/linux/capisample</code>
+		</ul>
+		<p>On Windows 64-bit:
+		<ul>
+			<li><code>bin\win64\sample.exe</code>
+		</ul>
+		<p>On Mac:
+		<ul>
+			<li><code>./bin/macosx/CAPIsample</code>
+		</ul>
+</ol>
+<p>By default, CAPIsample will connect to a device, initialize it and issue a series of tracking API commands that illustrate the basic principles of communicating with the measurement system.  The application does not issue every possible API command, but focuses on the most common  and basic tasks including:
+<ul>
+	<li>Connecting to an ethernet or serial port device (via serial-to-USB converter)</li>
+	<li>Initializing the system</li>
+	<li>Loading and initializing passive, active-wireless, and active tools (if an SCU is connected)</li>
+	<li>Getting/setting user parameters stored in the device firmware</li>
+	<li>Sending BX or BX2 to retrieve tracking data and printing it to the terminal in .csv format</li>
+	<li>Printing a small amount of tracking data to a .csv file called "example.csv"</li>
+</ul>
+
+<p>The source code for CAPIsample is provided so it can be analyzed and modified as desired. Developers may want to:
+<ul>
+	<li>Explore simulating alerts and how the alert data is transmitted to the application</li>
+	<li>Investigate using dummy tools to return 3D data</li>
+	<li>Refer to the API guide for their system to add commands that CAPIsample didn't implement</li>
+	<li>Completely gut and rewrite CAPIsample as a starting point for their project</li>
+</ul>
+
+<h3><a name="connect_dtls">Connecting via DTLS</h3>
+<p>If you use the <code>--encrypted</code> and <code>--udp</code> sample arguments together, for systems that support DTLS streaming, the sample will attempt to establish first a TLS connection (for control API calls), then a DTLS connection for sending the STREAM command to stream tracking information from the system. Because of how the DTLS protocol works, it is not made aware when the connection is closed from the camera's perspective. This means that if you run the sample twice in a row, the subsequent DTLS connection attempt will fail if it is within the idle connection timeout (set in the system by the <code>Param.Connect.Idle Timeout</code> parameter).
+<p>To handle this, there are a few options:
+<ol>
+	<li>Send RESET 1 to the system to end all open connections, and wait for the system to come back up.</li>
+	<li>Shorten the Idle Timeout (default is 300 seconds) so that you can re-establish connections sooner.</li>
+	<li>Wait the full timeout before attempting the new connection or running the sample again.</li>
+</ol>
+
+<h2><a name="building_sample">Building the sample</h2>
+<p>CAPIsample can be compiled on Windows using Visual Studio and on Linux and macOS using make. A Visual Studio 2017 .sln and Eclipse project files are provided for convenience.
+
+<h3>Required Tools</h3>
+<p>The following tools are required to build the sample:</p>
+<table border=1 rules=rows frame=lhs cellpadding=5>
+<th>Target OS<th>Tools
+<tr><td>Windows<td>Microsoft Visual Studio 2017 or later
+<tr><td>Linux<td>Native development tool chain including g++ and make
+<tr><td>macOS<td>XCode or Gnu development tool chain including g++ and make
+</table>
+
+<p>Optional for automatic document generation - <a href="https://www.doxygen.nl/index.html">Doxygen</a>
+
+<h3>Build the CAPI sample binaries</h3>
+<p>Open a terminal window and change the current directory to the directory where the capisample package is installed.  The following terminal commands can be used to compile CAPIsample and its Doxygen documentation.
+<p><b>Windows:</b>
+<p>There are two options:
+<ul>
+	<li>Open the solution file with Visual Studio and build the solution from with Visual Studio, or</li>
+	<li>Open developer console window from the start menu (search for "dev"). Go to the CAPIsample directory and type
+	<br><code>> msbuild /p:Configuration=Release CAPIsample.sln</code>
+</ul>
+<p><b>Mac and Linux:</b>
+<br>To build the library, the sample executable, as well as the GStreamer-based ARDemo (see below), open a terminal window in the CAPIsample directory and type:
+<br><code>$ make</code>
+<p>To build the library and the sample without the GStreamer-based ARDemo (see below), specify the following target instead:
+<br><code>$ make sample</code>
+
+<p><b>Documentation:</b>
+<br>Doxygen documentation can be built if Doxygen is installed by using the command line and typing
+<br><code>$ doxygen doxygen.conf</code>
+
+<h2><a name="ardemo">ARDemo</a></h2>
+<p>A video camera unit is an option for the Polaris Vega. This presents opportunities for combining the tracking and video data streams for augmented reality scenarios.  
+<p>For customers that have this option, an example of using CAPISample along with the GStreamer framework is provided. The ARDemo sample files can be found in the capisample\ndigst directory.
+<p>Please see capisample\ndigst\doc\GStreamerNotes.docx for more information.
+<p>Pre built binaries for windows can be found here: capisample\ndigst\bin
+<p>The executable ardemo.exe can be run with the appropriate parameters, for example: 
+<br><code>> ardemo 169.254.176.61 c:/capisample/sroms/ 8700339.rom 554</code>
+<br>Change the IP address of the PSU, directory path of rom files, rom file, and video port as needed.
+<p>Note that to run this executable, the GStreamer framework needs to be installed and the path environment variable set accordingly. (See capisample\ndigst\doc\GStreamerNotes.docx for more information).
+
+<h3>To build this ARDemo sample:</h3>
+<p><b>Windows:</b>
+<p>There are two options: 
+<ul>
+	<li>Open the capisample\ndigst\ndigst.sln solution file with Visual Studio and build the solution from with Visual Studio (one of the x64 configurations), or</li>
+	<li>Open developer console window from the start menu (search for "dev"). Go to the capisample\ndigst directory and type
+	<br><code>> msbuild /p:Configuration=Release ndigst.sln</code></li>
+</ul>
+
+<h2><a name="openssl">OpenSSL</a></h2>
+<p>Transport Layer Security (TLS) encrypts TCP streams. Datagram TLS (DTLS) encrypts UDP streams. OpenSSL is an open source library that can be integrated into existing applications to provide secure communication. It consists of two shared libraries: libssl (TLS/DTLS abstractions) and libcrypto (cryptography functions)
+<p>More <a href="https://wiki.openssl.org/index.php/Main_Page">details</a>
+<p>Download <a href="https://wiki.openssl.org/index.php/Binaries">binaries</a>
+
+<h3>Build instructions</h3>
+<p><b>Windows:</b>
+<ol>
+	<li>Install openssl via one of the binary distributions from the link above. Eg. C:\Program Files\OpenSSL-Win64</li>
+	<li><code>msbuild /p:Configuration=Release_TLS CAPIsample.sln</code></li>
+</ol>
+
+<p><b>Mac:</b>
+<ol>
+	<li>Install openssl via homebrew. Eg: <code>brew install openssl</code></li>
+	<li><code>make clean sample_tls</code></li>
+</ol>
+
+<p><b>Linux:</b>
+<ol>
+	<li>Install openssl via the package manager. Eg. Ubuntu 20.04: <code>apt install openssl libssl-dev</code></li>
+	<li><code>make clean sample_tls</code></li>
+</ol>
+
+<p>Note that the "<code>make clean</code>" is necessary because make will not detect changes in preprocessor options alone. If the sample is built without OpenSSL first, make will believe there is nothing to do, ignoring the fact that the sample_tls target adds preprocessor flags and linker options that require recompiling and relinking.
+
+<h2><a name="changes">List of Changes</a></h2>
+<p>The changes between versions of the sample are listed below:</p>
+<table border=1 rules=rows frame=lhs cellpadding=5>
+<tr><td><b>Version</b><td><b>Changes</b>
+<tr><td>1.9.7<td>STREAM command response ("OKAY") was being erased and interpreted as an error.</tr>
+<tr><td>1.9.6<td>Fixed issue introduced in 1.8.0 that made it impossible to run the sample executable with a serially connected device.
+<br>Bug fix: ToolData.h's <code>SystemStatus</code> values were defined incorrectly as enumerated rather than bit flags.
+<br>Added the "Hardware Configuration Changed" status to the <code>SystemStatus</code> values.</tr>
+<tr><td>1.9.5<td>Improved error handling for connecting via DTLS in the library and in the sample executable.
+<br>Improved error handling for streaming via TCP/TLS/UDP/DTLS.
+<br>Added a <code>RESET 0</code> command after initial connection in the sample executable to improve repeatability.</tr>
+<tr><td>1.9.4<td>Fixed a bug in the <code>stopStreaming</code> method that closed a connection before parsing the reply to <code>USTREAM</code>.</tr>
+<tr><td>1.9.3<td>Reverted changes to UDP to support Vega/Lyra CFR 10 implementation</tr>
+<tr><td>1.9.2<td>Added support for Version 2 of the GBF recording files, which may contain tagged key-value pairs in the header.</tr>
+<tr><td>1.9.1<td>Added ability to parse the Marker 3D Error GBF component (<code>0x9</code>) and the Line Separations GBF component (<code>0xB</code>), introduced to the BX2 command in API version G.003.007.</tr>
+<tr><td>1.9.0<td>Added the --cipher=[ciphersuite] option to allow TLS/DTLS ciphersuite to be specified</tr>
+<tr><td>1.8.2<td>Improved parsing of GBF recording files by monitoring the number of samples expected in the file.
+<br>Added parsing of NDI-internal components in a separate library with MSVS solution file.</tr>
+<tr><td>1.8.1<td>Method for parsing GBF recording files had an issue where the file reader was reading two extra bytes into the buffer every time a GBF container was read, resulting in quitting early from the method in cases with long files.</tr>
+<tr><td>1.8.0<td>Added method to CAPI to print a GBF recording file to a text file</tr>
+<tr><td>1.7.1<td>GBF Button component processing was made more robust</tr>
+<tr><td>1.7.0<td>Added DTLS (encrypted UDP) support</tr>
+<tr><td>1.6.0<td>Added the --encrypted option to demonstrate using Vega's new TLS encryption included in CFR008.
+<br>Replaced tabs with spaces.
+<br>Added streaming support (TCP and UDP)</tr>
+<tr><td>1.4.1<td>Uses ioctl() to set baud rate for MacOS 11 Big Sur
+<br>PVWR command uses int string instead of hex string
+<br>CAPI connect() returns an error code for failed serial port connections</tr>
+<tr><td>1.4.0<td>AR Demo builds on Linux and Mac</tr>
+<tr><td>1.3.0<td>Added the AR Demo (Windows)</tr>
+<tr><td>1.2.0<td>Improved readme and doxygen generation</tr>
+<tr><td>1.1.0<td>Replaced CMake build with make and visual studio builds</tr>
+</table>
+</body></html>

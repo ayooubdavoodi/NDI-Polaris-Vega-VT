@@ -1,0 +1,35 @@
+{
+  "device": "Polaris Vega VCU-0",
+  "notes": "Copied from ARDemo GET outputs",
+  "extrinsic": {
+    "q0": 0.010998,
+    "qx": 0.706177,
+    "qy": 0.707911,
+    "qz": -0.007399,
+    "tx": -1.20948,
+    "ty": 50.5984,
+    "tz": -58.7249,
+    "units": "mm",
+    "frame": "camera <- tracker"
+  },
+  "intrinsic": {
+    "fu": 2009.85,
+    "fv": 2007.51,
+    "u0": 1300.64,
+    "v0": 1000.94
+  },
+  "distortion": {
+    "k1": -0.135272,
+    "k2": 0.083938,
+    "k3": 0.340165,
+    "p1": -0.002808,
+    "p2": 0.004274,
+    "model": "opencv-k1,k2,p1,p2,k3"
+  },
+  "roi": {
+    "binning_x": 1,
+    "binning_y": 1,
+    "left": 354,
+    "top": 482
+  }
+}

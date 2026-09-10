@@ -1,0 +1,46 @@
+Date:                           2025-08-19
+Manufacturer:                   u0146537
+Part Number:                    KIA_phantom_ID001_ma
+Tool Revision:                  0
+Sequence Number:                0
+Tool Type:                      User Defined
+Tool Sub Type:                  Undefined
+Active wireless tracking:       false
+Marker Type:                    Passive Sphere
+Maximum Marker Angle:           90
+Maximum Marker Error:           2.0000
+Minimum Markers:                3
+Spread 1:                       0.0000
+Spread 2:                       0.0000
+Spread 3:                       0.0000
+Stray tracking:                 false
+Three-marker lock-on:           true
+Unique geometry:                true
+Use markers on all faces:       false
+
+Marker Positions:
+    30.00          45.00         -15.00
+    0.00           65.00         -10.00
+   -20.00          45.00         -15.00
+    0.00           35.00         -18.00
+
+Marker Normals:
+    0.0000         0.2577        -0.9662
+    0.0000         0.2577        -0.9662
+    0.0000         0.2577        -0.9662
+    0.0000         0.2577        -0.9662
+
+Marker Groups:
+    1
+    1
+    1
+    1
+
+Marker Faces:
+    1
+    1
+    1
+    1
+
+Face Normals:
+    1.0000         0.0000         0.0000
